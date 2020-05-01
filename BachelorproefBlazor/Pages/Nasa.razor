@@ -1,0 +1,31 @@
+﻿@page "/nasa"
+@inject HttpClient Http
+@using BachelorproefBlazor.Models;
+
+@if (photos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1 className="text-center">Nasa</h1>
+    <div class="row">
+        @foreach (var photo in photos)
+        {
+            <Photo p=photo />
+        }
+    </div>
+}
+
+@code {
+    private Picture[] photos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var incoming = await Http.GetJsonAsync<Incoming>(
+            "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos" +
+            "?earth_date=2015-6-3&api_key=JiErxLPFtI9gmM24WjFWpaP9m84iXtCZjX0FcfOb"
+        );
+        photos = incoming.Photos;
+    }
+}

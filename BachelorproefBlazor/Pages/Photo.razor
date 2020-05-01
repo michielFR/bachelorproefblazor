@@ -1,0 +1,21 @@
+﻿@using BachelorproefBlazor.Models;
+@inject NavigationManager NavigationManager
+
+<div class="col-md-3 d-flex justify-content-around">
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="@p.Img_src" alt="image cap">
+        <div class="card-body">
+            <h5 class="card-title">@(p.Id + " " + p.Camera.Name)</h5>
+            <p class="card-text">
+                Date: @p.Earth_date
+                <br />
+                Rover: @p.Rover.Name
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Picture p { get; set; }
+}

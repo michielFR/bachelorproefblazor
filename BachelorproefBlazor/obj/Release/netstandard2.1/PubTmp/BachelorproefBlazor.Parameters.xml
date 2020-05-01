@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="BachelorproefBlazor" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\michi\\Documents\\School\\Jaar\ 3\\Bachelor\ proef\\BachelorproefBlazor\\BachelorproefBlazor\\obj\\Release\\netstandard2\.1\\PubTmp\\Out\\$" />
+  </parameter>
+</parameters>

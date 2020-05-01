@@ -1,0 +1,171 @@
+﻿@page "/sort"
+
+<h1>Genereren & Sorteren</h1>
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-2">
+                <h5>@currentdistribution</h5>
+            </div>
+            <div class="col-md-9 text-right">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-success" @onclick="GenereerRandomGetallen">Random</button>
+                    <button type="button" class="btn btn-success" @onclick="GenereerReversedGetallen">Reversed</button>
+                    <button type="button" class="btn btn-success" @onclick="GenereerFewUniqueGetallen">Few unique</button>
+                    <button type="button" class="btn btn-success" @onclick="GenereerAlmostSortedGetallen">Almost sorted</button>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-warning" @onclick="BubbleSort">Sorteer</button>
+            </div>
+        </div>        
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Gegenereerd</h5>
+        @if (gegenereerd == null)
+        {
+            <p>nog niets gegenereerd</p>
+        }
+        else
+        {
+            @for (int i = 0; i < 100; i++)
+            {
+                string text = gegenereerd[i].ToString() + " - ";
+                @text
+            }
+        }
+
+        <hr />
+        <h5 class="card-title">Gesorteerd</h5>
+        @if (gesorteerd == null)
+        {
+            <p>nog niets gegenereerd</p>
+        }
+        else
+        {
+            @for (int i = 0; i < 100; i++)
+            {
+                string text = gesorteerd[i].ToString() + " - ";
+                @text
+            }
+        }
+
+        @if (justsorted == true)
+        {
+            <hr />
+            <h5><b>Uitvoertijd</b> = @difference ms</h5>
+            <h5><b>Vergelijkingen</b> = @comparisons.ToString("0,0")  </h5>
+            <h5><b>Array wijzigingen</b> = @arraychecks.ToString("0,0")  </h5>
+        }
+    </div>
+</div>
+
+@code {
+    private string currentdistribution = "Genereer eerst";
+    private int[] gegenereerd;
+    private int[] gesorteerd;
+    private long difference = 0;
+    private long comparisons = 0;
+    private long arraychecks = 0;
+    private bool justsorted = false;
+
+
+    private void GenereerRandomGetallen()
+    {
+        currentdistribution = "Random";
+        justsorted = false;
+        gegenereerd = new int[5000];
+        Random randNum = new Random();
+        for (int i = 0; i < gegenereerd.Length; i++)
+        {
+            gegenereerd[i] = randNum.Next(0, 1000);
+        }
+        FillGesorteerd();
+    }
+
+    private void GenereerReversedGetallen()
+    {
+        currentdistribution = "Reversed";
+        justsorted = false;
+        gegenereerd = new int[5000];
+        for (int i = 0; i < gegenereerd.Length; i++)
+        {
+            gegenereerd[i] = 5000 - i;
+        }
+        FillGesorteerd();
+    }
+
+    private void GenereerFewUniqueGetallen()
+    {
+        currentdistribution = "Few unique";
+        justsorted = false;
+        gegenereerd = new int[5000];
+        Random random = new Random();
+        int getal = 1;
+        for (int i = 0; i < gegenereerd.Length; i++)
+        {
+            gegenereerd[i] = getal;
+            if(i % 500 == 0)
+            {
+                getal++;
+            }
+        }
+        gegenereerd = gegenereerd.OrderBy(x => random.Next()).ToArray();
+        FillGesorteerd();
+    }
+
+    private void GenereerAlmostSortedGetallen()
+    {
+        currentdistribution = "Almost sorted";
+        justsorted = false;
+        gegenereerd = new int[5000];
+        for (int i = 0; i < gegenereerd.Length; i++)
+        {
+            gegenereerd[i] = i;
+        }
+        gegenereerd[4500] = 5;
+        FillGesorteerd();
+    }
+
+    private void FillGesorteerd()
+    {
+        gesorteerd = new int[5000];
+        for (int i = 0; i < gegenereerd.Length; i++)
+        {
+            gesorteerd[i] = gegenereerd[i];
+        }
+    }
+
+    private void BubbleSort()
+    {
+        long _comparisons = 0;
+        long _arraychecks = 0;
+        long start = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        bool swapp;
+        var x = gesorteerd;
+        var n = x.Length - 1;
+        do
+        {
+            swapp = false;
+            for (var i = 0; i < n; i++)
+            {
+                _comparisons += 1;
+                if (x[i] > x[i + 1])
+                {
+                    var temp = x[i];
+                    x[i] = x[i + 1];
+                    x[i + 1] = temp;
+                    swapp = true;
+                    _arraychecks += 2;
+                }
+            }
+            n--;
+        } while (swapp);
+        gesorteerd = x;
+        long end = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        difference = end - start;
+        comparisons = _comparisons;
+        arraychecks = _arraychecks;
+        justsorted = true;
+    }
+}
